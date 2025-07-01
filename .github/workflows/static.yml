@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Direktori Staf Malaysia</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: radial-gradient(circle at top left, #0f0f2e, #050517);
+      color: #e0e0f0;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .neon {
+      text-shadow: 0 0 8px #00fff7, 0 0 16px #00fff7;
+      color: #00fff7;
+    }
+  </style>
+</head>
+<body class="p-6">
+  <div class="max-w-6xl mx-auto">
+    <h1 class="text-4xl font-bold mb-6 neon text-center">📘 Direktori Staf Malaysia</h1>
+
+    <!-- Negeri & Carian -->
+    <div class="flex flex-col md:flex-row gap-4 mb-6">
+      <select id="negeriSelect" onchange="filterData()" class="w-full md:w-1/3 p-3 bg-gray-900 border border-cyan-500 rounded-lg text-white">
+        <option value="">-- Pilih Negeri --</option>
+        <option value="Selangor">Selangor</option>
+        <option value="Johor">Johor</option>
+        <option value="Sabah">Sabah</option>
+        <option value="Kedah">Kedah</option>
+        <option value="Kelantan">Kelantan</option>
+        <!-- Tambah negeri lain jika perlu -->
+      </select>
+
+      <input type="text" id="searchInput" oninput="filterData()" placeholder="Cari staf..." class="w-full md:flex-1 p-3 rounded-lg bg-gray-900 border border-cyan-500 text-white placeholder-gray-400" />
+    </div>
+
+    <!-- Senarai Staf -->
+    <div id="staffList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </div>
+
+  <script>
+    const staffData = [
+      { name: "Ahmad Zulkarnain", position: "Ketua Unit IT", department: "Teknologi Maklumat", state: "Selangor" },
+      { name: "Nor Aisyah", position: "Pegawai HR", department: "Sumber Manusia", state: "Selangor" },
+      { name: "Tan Wei Jie", position: "Eksekutif Kewangan", department: "Kewangan", state: "Johor" },
+      { name: "Siti Nurhaliza", position: "Pereka Grafik", department: "Pemasaran", state: "Sabah" },
+      { name: "John Lim", position: "Jurutera Sistem", department: "Teknologi Maklumat", state: "Johor" },
+      { name: "Azizan Ramli", position: "Pengurus Operasi", department: "Operasi", state: "Kedah" },
+      { name: "Faridah Ibrahim", position: "Pegawai Tadbir", department: "Pentadbiran", state: "Kelantan" },
+      // Tambah staf & negeri lain di sini
+    ];
+
+    function renderStaff(list) {
+      const container = document.getElementById("staffList");
+      container.innerHTML = "";
+      if (list.length === 0) {
+        container.innerHTML = "<p class='text-center text-gray-400 col-span-full'>Tiada staf ditemui.</p>";
+        return;
+      }
+      list.forEach(staff => {
+        const card = document.createElement("div");
+        card.className = "bg-gray-800 p-4 rounded-2xl border border-cyan-600 shadow-lg hover:scale-105 transition duration-300";
+        card.innerHTML = `
+          <h3 class="text-xl font-semibold text-cyan-400 mb-1">${staff.name}</h3>
+          <p class="text-sm text-gray-300">${staff.position}</p>
+          <p class="text-sm text-gray-400">${staff.department}</p>
+          <p class="text-xs text-cyan-300 mt-2">📍 ${staff.state}</p>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function filterData() {
+      const negeri = document.getElementById("negeriSelect").value.toLowerCase();
+      const keyword = document.getElementById("searchInput").value.toLowerCase();
+
+      const filtered = staffData.filter(staff =>
+        (negeri === "" || staff.state.toLowerCase() === negeri) &&
+        (staff.name.toLowerCase().includes(keyword) ||
+         staff.department.toLowerCase().includes(keyword) ||
+         staff.position.toLowerCase().includes(keyword))
+      );
+
+      renderStaff(filtered);
+    }
+
+    // Papar semua staf masa mula-mula
+    renderStaff(staffData);
+  </script>
+</body>
+</html>
